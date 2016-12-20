@@ -1,6 +1,6 @@
 var app = angular.module('chirpApp', []);
 
-app.controller('mianController', function($scope) {
+app.controller('mainController', function($scope) {
     $scope.posts = [];
     $scope.newPost = {created_by: '', text: '', created_at: ''};
 
@@ -9,4 +9,4 @@ app.controller('mianController', function($scope) {
         $scope.posts.push($scope.newPost);
         $scope.newPost = {created_by: '', text: '', created_at: ''};
     };
-})
+});
