@@ -1,0 +1,29 @@
+body {
+    padding-top: 70px;
+    width: 100%;
+    height: 100%;
+    font-family: "Source Sans Pro","Helvetica Neue",Helvetica,Arial,sans-serif;
+}
+
+a {
+    color: #00B7FF;
+}
+
+.submit-btn {
+    background-color: #B7DBFF;
+    margin: 10px 0px 10px 0px;
+}
+
+.post {
+    padding: 10px;
+    margin-bottom: 5px;
+    border-radius: 5px;
+}
+
+.odd {
+    background-color: #F2F9FF;
+}
+
+.event {
+    background-color: #ECEFF3;
+}
