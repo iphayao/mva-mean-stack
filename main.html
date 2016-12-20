@@ -1,9 +1,18 @@
 <html ng-app>
     <head>
+        <title>Chirp</title>
         <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.0/angular.js"></script>
+        <script src="javascripts/chirpApp.js"></script>
     </head>
-    <body>
-        <input type="text" ng-model="inputText" placeholder="World"/>
-        <h1>Hello {{inputText}}</h1>
+    <body ng-app="chirpApp">
+        <div id='main' ng-controller="mainController">
+            <form>
+                <input type="text" placeholder="Your name"/>
+                <textarea required maxlength="200" rows="3" placeholder="Say something"></textarea>
+            </form>
+            <div id="post-stream">
+                <h4>Chrip Feed</h4>
+            </div>
+        </div>
     </body>
 </html>
