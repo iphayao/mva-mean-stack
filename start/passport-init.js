@@ -1,40 +1,51 @@
 var LocalStrategy = require('passport-local').Strategy;
 var bCrypt = require('bcrypt-nodejs');
 // temporary data store
-var users = {};
+var mongoose = require('mongoose');
+var User = mongoose.model('User');
+var Post = mongoose.model('Post');
 
 module.exports = function(passport) {
     
     // passport need to be able to serialize and deserialize users to support persistant login sessions
     passport.serializeUser(function(user, done) {
-        console.log('serialize user:', user.username);
+        console.log('username: ', user.username);
+        console.log('serialize user:', user._id);
         // return the unique id for the user
-        done(null, user.username);
+        done(null, user._id);
     });
 
     // deserialize use will call with the unique id provide by serialize
-    passport.deserializeUser(function(username, done) {
-        return done(null, users[username]);
+    passport.deserializeUser(function(id, done) {
+        User.findById(id, function(err, user) {
+            console.log('deserialize user:', id);
+            done(err, user);
+        });
     });
 
     passport.use('login', new LocalStrategy({
             passReqToCallback: true
         },
         function(req, username, password, done) {
-            console.log(users);
-            if(users[username]) {
-                console.log('User Not Found with username: ' + username);
-                return done(null, false);
-            }
+ 
+            User.findOne({'username': username}, function(err, user) {
+                if(err) {
+                    return done(err);
+                }
+                // if no user with username
+                if(!user) {
+                    console.log('user not found with username ' + username);
+                    return done(null, false);
+                }
 
-            if(isValidPassword(users[username], password)) {
-                return done(null, users[username]);
-            }
-            else {
-                console.log('Invalid password ' + username);
-                return done(null, false);
-            }
-            // return done('we have not implemented this', false);
+                if(!isValidPassword(user, password)) {
+                    console.log('incorrect password');
+                    return done(null, false);
+                }
+
+                return done(null, user);
+            });
+            //return done(null, false);
         }
     ));
 
@@ -42,24 +53,42 @@ module.exports = function(passport) {
             passReqToCallback : true // allow us to pass back the entire request to the callback
         },
         function(req, username, password, done) {
-            if(users[username]) {
-                console.log('User already exits with username: ', username);
-                return done(null, false);
-            }
-            
-            users[username] = {
-                username: username,
-                password: createHash(password)
-            }
 
-            console.log(users[username].username + ' Registration successful');
-            return done(null, users[username]);
+            User.findOne({'username': username}, function(err, user) {
+                if(err) {
+                    console.log('error in signup ' + err);
+                    return done(err);
+                }
+
+                if(user) {
+                    // we have already signed this user up
+                    console.log('user already exist with username: ' + username);
+                    return done(null, false);
+                }
+                else {
+                    var user = new User();
+                    user.username = username;
+                    user.password = createHash(password);
+                    
+                    user.save(function(err, user) {
+                        if(err) {
+                            //return done(err, false);
+                            console.log('error in saving user ' + err);
+                            throw err;
+                        }
+                        console.log('successfully signed up user ' + username);
+                        return done(null, user);
+                    });
+                }
+            });
+
+            
             //return done('we have not implemented this', false);
         }
     ));
 
     var isValidPassword = function(user, password) {
-        return bCrypt.compareSync(password, user.passport);
+        return bCrypt.compareSync(password, user.password);
     };
     // generate hash using bCrypt
     var createHash = function(password) {
