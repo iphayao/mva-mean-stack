@@ -1,6 +1,19 @@
 var express = require('express');
 var router = express.Router();
 
+function isAuthenticated (req, res, next) {
+    if(req.method === "GET") {
+        return next();
+    }
+    if(req.isAuthenticated()) {
+        return next();
+    }
+
+    return res.redirect('/#login');
+}
+
+router.use('/posts', isAuthenticated);
+
 router.route('/posts')
     .get(function(req, res) {
         //temporary solution
