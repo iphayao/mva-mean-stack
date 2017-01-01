@@ -7,9 +7,11 @@ var bodyParser = require('body-parser');
 var passport = require('passport');
 var session = require('express-session');
 var mongoose = require('mongoose');
+// initialize models
+require('./models/models.js'); // model schema
 // connect to mongodb
+mongoose.Promise = global.Promise;
 mongoose.connect("mongodb://localhost:27017/chrip-test");
-
 
 var api = require('./routes/api');
 var authenticate = require('./routes/authenticate')(passport);
@@ -43,8 +45,7 @@ app.use(function(req, res, next) {
   next(err);
 });
 
-// initialize models
-require('./models/models.js'); // model schema
+
 // initialize passport
 var initPassport = require('./passport-init');
 initPassport(passport);
