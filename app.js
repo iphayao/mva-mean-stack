@@ -13,6 +13,7 @@ require('./models/models.js'); // model schema
 mongoose.Promise = global.Promise;
 mongoose.connect("mongodb://localhost:27017/chrip-test");
 
+var index = require('./routes/index');
 var api = require('./routes/api');
 var authenticate = require('./routes/authenticate')(passport);
 
@@ -35,6 +36,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(passport.initialize());
 app.use(passport.session());
 
+app.use('/', index);
 app.use('/api', api);
 app.use('/auth', authenticate);
 
@@ -64,9 +66,6 @@ if(app.get('env') === 'development') {
 
 app.use(function(err, req, res, next) {
   // set locals, only providing error in development
-  //res.locals.message = err.message;
-  //res.locals.error = req.app.get('env') === 'development' ? err : {};
-
   // render the error page
   res.status(err.status || 500);
   res.render('error', {
