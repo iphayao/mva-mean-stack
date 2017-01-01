@@ -1,7 +1,6 @@
 <div class="col-md-offset-2 col-md-8">
-    <form ng-submit="post()">
+    <form ng-submit="post()" ng-show="authenticated">
         <h4>{{current_user}} says</h4>
-        <input type="text" class="form-control" placeholder="Your name" ng-model="newPost.created_by"/>
         <textarea required class="form-control" maxlength="200" rows="3" placeholder="Say something" ng-model="newPost.text"></textarea>
         <input class="btn submit-btn pull-right" type="submit" value="Chirp!"/>
     </form>

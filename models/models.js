@@ -4,13 +4,13 @@ var Schema = mongoose.Schema;
 var userSchema = new mongoose.Schema({
     username: String,
     password: String,
-    create_at: {type: Date, default: Date.now}
+    created_at: {type: Date, default: Date.now}
 });
 
 var postSchema = new mongoose.Schema({
     text: String,
-    create_by: String,
-    create_at: {type: Date, default: Date.now}
+    created_by: String,
+    created_at: {type: Date, default: Date.now}
 });
 
 // declare a model called User with has shcema userSchema
